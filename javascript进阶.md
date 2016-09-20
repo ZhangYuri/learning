@@ -1,4 +1,5 @@
-####Javascript进阶
+##Javascript进阶
+###函数
 ####1.arguments
 
 
@@ -22,3 +23,16 @@
 	}
 	avg(2, 3, 4, 5); // 3.5
 	avg.apply(null, [2, 3, 4, 5]); // 3.5
+
+####3.递归调用
+	
+	function countChars(elm) {
+	    if (elm.nodeType == 3) { // 文本节点
+	        return elm.nodeValue.length;
+	    }
+	    var count = 0;
+	    for (var i = 0, child; child = elm.childNodes[i]; i++) {
+	        count += countChars(child);
+	    }
+	    return count;
+	}
