@@ -39,3 +39,135 @@ ${}内部的内容不会再被直接输出，而是被解析成该变量所对�
 	
 	console.log(Person.sayName());
 少写了几个字，生活又美好了许多。
+
+###3.=>
+再来一个例子，现在有1，2，3，4，5这个简单的数组，把数组中的每个元素乘以2，通常会写成：
+	
+	let numbers = [1,2,3,4,5];
+	let doubles = numbers.map(function(n){
+	  return n * 2;
+	})
+	
+	console.log(doubles); //[2, 4, 6, 8, 10]
+用上了＝>,就会简化为：
+
+	let numbers = [1,2,3,4,5];
+	let doubles = numbers.map(n => n * 2);  //这一行
+	
+	console.log(doubles); //[2, 4, 6, 8, 10]
+当然不仅仅是这样，再来一个例子
+	
+	let  Person = {
+	  name:`ZhangYue`,
+	  hobbies:[`reading`,`computer`,`serial`],
+	  showHobbies(){
+	    this.hobbies.forEach(function(hobby){
+	      console.log(`${this.name} likes ${hobby}`); 
+	    })
+	  }
+	}
+	
+	Person.showHobbies();
+	//"JS Bin Output  likes reading"
+	//"JS Bin Output  likes computer"
+	//"JS Bin Output  likes computer"
+这个当然是一种错误的写法，得不到我们想要的结果，因为在forEach函数中，this指代的不再当前对象。
+
+	var  Person = {
+	  name:`ZhangYue`,
+	  hobbies:[`reading`,`computer`,`serial`],
+	  showHobbies(){
+	    this.hobbies.forEach( hobby => {
+	      console.log(`${this.name} likes ${hobby}`);
+	    });
+	  }
+	}
+	Person.showHobbies();
+	//"ZhangYue likes reading"
+	//"ZhangYue likes computer"
+	//"ZhangYue likes computer"
+在使用=>的时候，this指代的始终都是当前对象。
+
+###4. ...args（剩余参数）
+我们所知道的是arguments是函数的参数对象。一个例子来使用这个arguments。求所有参数的和。
+
+	let sum = function() {
+	  return Array.prototype.reduce.call(arguments,(prev,curr) => {
+	    return prev + curr;
+	  });
+	}
+	
+	console.log( sum(1,2,3,4) ); //10
+再看看...args是什么。
+	
+	let sum = function(...args) {
+	  console.log(args);
+	}
+	
+	sum(1,2,3,4); //[1, 2, 3, 4]
+由此可以看出，...args是由参数组成的数组。
+
+	let sum = function(a,...args) {
+	  console.log(a,args);
+	}
+	
+	sum(1,2,3,4); 
+	//1
+	//[2, 3, 4]
+此时，...args就是除了参数a之外剩余的参数。如果使用...args,该如何求参数之和呢。
+
+	let sum = function(...args) {
+	  return args.reduce((prev,curr) => {
+	    return prev + curr;
+	  })
+	}
+	
+	console.log(sum(1,2,3,4));
+
+比直接使用arguments对象又方便了许多，当然不止这样。
+	
+	let mult = function(mul,...args) {
+	  return args.map((n) => {
+	    return mul * n;
+	  })
+	}
+	
+	console.log(mult(1,2,3,4)); //[2, 3, 4]
+
+使用args很方便实现了第一个参数和剩余的参数分别相乘，并返回了一个新的数组。
+求一个数组中最大的值，我们常常这样使用。
+
+	let max = Math.max(1,2,3,5,9,3);
+	
+	console.log(max);
+但是，往往会出现这样的情况，知道一个数组，直接把数组作为参数放进去？
+
+	let arr = [1,4,7,9,5];
+	let max = Math.max(arr);
+	
+	console.log(max); //NaN
+这样显然不行。需要使用apply函数才能直接使用数组作为参数。
+	
+	let arr = [1,4,7,9,5];
+	let max =  Math.max.apply(null,arr);
+	
+	console.log(max); //9
+使用...args,又是如何实现的呢？
+
+	let arr = [1,4,7,9,5];
+	let max =  Math.max(...arr);
+	
+	console.log(max);
+也不需要使用apply，又方便了一些。最后再来一个例子，通常我们使用concat来实现数组的拼接，这里使用...args同样是很方便。
+
+	let arr = [1,4,7,9,5];
+	let new_arr =  [1,2,4,5,...arr]; 
+	
+	console.log(new_arr);  //[1, 2, 4, 5, 1, 4, 7, 9, 5]
+同理，不仅可以拼接在开头结尾，它可以在新数组的任意位置。
+	
+	let arr = [1,4,7,9,5];
+	let new_arr =  [1,2,...arr,4,5]; 
+	
+	console.log(new_arr); //[1, 2, 1, 4, 7, 9, 5, 4, 5]
+	
