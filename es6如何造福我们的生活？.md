@@ -170,4 +170,69 @@ ${}内部的内容不会再被直接输出，而是被解析成该变量所对�
 	let new_arr =  [1,2,...arr,4,5]; 
 	
 	console.log(new_arr); //[1, 2, 1, 4, 7, 9, 5, 4, 5]
+
+###5.Destructuring(解构)
+获取对象的部分属性或方法，以及获取数组的部分元素。
+
+	let Person = {
+	  name:'ZhangYue',
+	  age:18,
+	  location:'NanJing'
+	}
+	let {name:myname,age:myage} = Person;
+	console.log(myname,myage);
 	
+	
+	let numbers = [1,2,3,4,5];
+	let [first,second,...rest] = numbers; //结合之前的剩余参数
+	console.log(first,second,rest);
+###6.gulp_babel
+1)在项目中安装gulp
+2)安装gulp-babel、babel-preset-es2015
+3)gulpfile.js
+	
+	const gulp = require('gulp');
+	const babel = require('gulp-babel');
+	
+	gulp.task('es6', () => {
+		return gulp.src('src/app.js')
+			.pipe(babel({
+				presets: ['es2015']
+			}))
+			.pipe(gulp.dest('build'));
+	});
+	
+	gulp.task('default',['es6'], () => {
+		gulp.watch('src/app.js',['es6'])
+	});
+4)在src/app.js（被编译的es6）
+	
+	let name = 'Zhangyue';
+
+	let add = (a,b) => a + b;
+	
+	let sum = (...numbers) => {
+		return numbers.reduce((prev,curr) => {
+			return prev + curr;
+		})
+	}
+5)运行gulp
+6)编译成js的严格模式
+	
+	'use strict';
+
+	var name = 'Zhangyue';
+	
+	var add = function add(a, b) {
+		return a + b;
+	};
+	
+	var sum = function sum() {
+		for (var _len = arguments.length, numbers = Array(_len), _key = 0; _key < _len; _key++) {
+			numbers[_key] = arguments[_key];
+		}
+	
+		return numbers.reduce(function (prev, curr) {
+			return prev + curr;
+		});
+	};
